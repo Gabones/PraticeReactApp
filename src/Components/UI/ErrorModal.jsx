@@ -1,23 +1,35 @@
+import ReactDOM from 'react-dom';
+import { Fragment } from 'react';
 import Card from './Card.jsx';
 import Button from './Button.jsx';
-import './ErrorModal.css';
+import classes from './ErrorModal.module.css';
 
-const ErrorModal = (props) => {
-    return(
-    <div>
-        <div className="backdrop" onClick={props.onDismiss}></div>
-        <Card className="modal">
-            <header className="header">
+const Backdrop = (props) => {
+    return <div className={classes.backdrop} onClick={props.onDismiss} />;
+};
+
+const ModalOverlay = (props) => {
+    return (
+        <Card className={classes.modal}>
+            <header className={classes.header}>
                 <h2>{props.title}</h2>
             </header>
-            <div className="content">
+            <div className={classes.content}>
                 <p>{props.message}</p>
             </div>
-            <footer className="actions">
+            <footer className={classes.actions}>
                 <Button onClick={props.onDismiss}>OK</Button>
             </footer>
         </Card>
-    </div>
+    );
+};
+
+const ErrorModal = (props) => {
+    return (
+        <Fragment>
+            {ReactDOM.createPortal(<Backdrop onDismiss={props.onDismiss}/>, document.getElementById('backdrop-root'))}
+            {ReactDOM.createPortal(<ModalOverlay title={props.title} message={props.message} onDismiss={props.onDismiss}/>, document.getElementById('overlay-root'))}
+        </Fragment>
     )
 };
 
